@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Binary Search Game with Random Values</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center p-8">
+
+  <h1 class="text-3xl font-bold mb-4 text-center">🔍 Binary Search Game</h1>
+  <p class="text-lg mb-4 text-center">Click the <strong>middle element</strong> in each subarray. Each step appears below the last.</p>
+
+  <div id="arrays-container" class="flex flex-col items-center gap-4 w-full mb-6"></div>
+  <div id="info" class="text-center text-xl font-semibold text-gray-800 mb-4"></div>
+
+  <button id="restart-btn" class="bg-blue-500 text-xl text-white font-bold px-2 py-1 rounded hover:bg-gray-400 hidden">
+    🔁 Play Again
+  </button>
+
+  <script>
+    let fullArray = [];
+    let target;
+    let low, high, steps;
+    const container = document.getElementById('arrays-container');
+    const infoDiv = document.getElementById('info');
+    const restartBtn = document.getElementById('restart-btn');
+
+    // Generate unique random integers, sort ascending
+    function generateSortedRandomArray(size, min, max) {
+      const set = new Set();
+      while(set.size < size) {
+        const val = Math.floor(Math.random() * (max - min + 1)) + min;
+        set.add(val);
+      }
+      return Array.from(set).sort((a,b) => a - b);
+    }
+
+    function resetGame() {
+      fullArray = generateSortedRandomArray(15, 1, 100);
+      target = fullArray[Math.floor(Math.random() * fullArray.length)];
+      low = 0;
+      high = fullArray.length - 1;
+      steps = 0;
+      container.innerHTML = '';
+      infoDiv.innerHTML = `<p>🎯 Target value: <strong>${target}</strong></p>`;
+      restartBtn.classList.add("hidden");
+      renderSubArray(low, high);
+    }
+
+    function renderSubArray(start, end) {
+      const row = document.createElement('div');
+      row.className = 'flex justify-center gap-2';
+
+      for (let i = start; i <= end; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = fullArray[i];
+        btn.className = 'bg-blue-500 text-xl text-white font-bold px-2 py-1 rounded hover:bg-gray-400';
+        btn.addEventListener('click', () => handleClick(i, row));
+        row.appendChild(btn);
+      }
+
+      container.appendChild(row);
+      scrollToBottom();
+    }
+
+    function handleClick(index, row) {
+      const expectedMid = Math.floor((low + high) / 2);
+      steps++;
+
+      if (index !== expectedMid) {
+        alert(`Incorrect! The correct mid is at index ${expectedMid} (value ${fullArray[expectedMid]}). Try again.`);
+        return;
+      }
+
+      const midValue = fullArray[index];
+
+      Array.from(row.children).forEach(btn => btn.disabled = true);
+
+      if (midValue === target) {
+        row.children[index - low].classList.add('bg-green-500');
+        infoDiv.innerHTML = `<p class="text-green-700 font-bold">🎉 You found the target <strong>${target}</strong> in ${steps} steps!</p>`;
+        restartBtn.classList.remove("hidden");
+        return;
+      } else if (midValue < target) {
+        low = index + 1;
+      } else {
+        high = index - 1;
+      }
+
+      if (low > high) {
+        infoDiv.innerHTML = `<p class="text-red-600 font-bold">❌ No more elements left. Target was ${target}. This shouldn't happen in correct binary search!</p>`;
+        restartBtn.classList.remove("hidden");
+        return;
+      }
+
+      renderSubArray(low, high);
+    }
+
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    restartBtn.addEventListener('click', resetGame);
+
+    // Start the game
+    resetGame();
+  </script>
+         <button
+        onclick="window.location.href='game.html'"
+        class="bg-blue-500 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400"
+        >
+        Go to Other Page
+        </button>
+
+</body>
+</html>
