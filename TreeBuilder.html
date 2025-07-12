@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Binary Tree Visualizer</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+    }
+
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 20px;
+    }
+
+    input, select, button {
+      padding: 8px 12px;
+      font-size: 16px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Visualizador de Árbol Binario</h1>
+
+  <input type="number" id="nodeValue" placeholder="Ingresa un número" />
+  <select id="nodeColor">
+    <option value="green">Verde</option>
+    <option value="blue">Azul</option>
+  </select>
+  <button onclick="addNode()">Agregar Nodo</button>
+  <br />
+  <button onclick="startBFS()">Búsqueda en anchura</button>
+  <button onclick="startDFS()">Búsqueda en profundidad</button>
+
+  <canvas id="treeCanvas" width="1000" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById("treeCanvas");
+    const ctx = canvas.getContext("2d");
+
+    class TreeNode {
+      constructor(value, color) {
+        this.value = value;
+        this.color = color;
+        this.left = null;
+        this.right = null;
+        this.x = 0;
+        this.y = 0;
+      }
+    }
+
+    let root = null;
+    const nodeRadius = 20;
+    const verticalSpacing = 80;
+
+    function addNode() {
+      const val = parseInt(document.getElementById("nodeValue").value);
+      const color = document.getElementById("nodeColor").value;
+
+      if (!isNaN(val)) {
+        if (!root) {
+          root = new TreeNode(val, color);
+        } else {
+          insertLevelOrder(root, val, color);
+        }
+        assignPositions(root, canvas.width / 2, 50, canvas.width / 4);
+        redraw();
+      }
+    }
+
+    function insertLevelOrder(node, value, color) {
+      const queue = [node];
+      while (queue.length > 0) {
+        const current = queue.shift();
+        if (!current.left) {
+          current.left = new TreeNode(value, color);
+          return;
+        } else {
+          queue.push(current.left);
+        }
+
+        if (!current.right) {
+          current.right = new TreeNode(value, color);
+          return;
+        } else {
+          queue.push(current.right);
+        }
+      }
+    }
+
+    function assignPositions(node, x, y, offset) {
+      if (!node) return;
+      node.x = x;
+      node.y = y;
+      assignPositions(node.left, x - offset, y + verticalSpacing, offset / 2);
+      assignPositions(node.right, x + offset, y + verticalSpacing, offset / 2);
+    }
+
+    function drawNode(node, highlight = false) {
+      if (!node) return;
+
+      if (node.left) {
+        ctx.beginPath();
+        ctx.moveTo(node.x, node.y);
+        ctx.lineTo(node.left.x, node.left.y);
+        ctx.stroke();
+      }
+
+      if (node.right) {
+        ctx.beginPath();
+        ctx.moveTo(node.x, node.y);
+        ctx.lineTo(node.right.x, node.right.y);
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
+      ctx.fillStyle = highlight ? "orange" : (node.color === "blue" ? "#2196f3" : "#4caf50");
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "14px sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(node.value, node.x, node.y);
+
+      drawNode(node.left);
+      drawNode(node.right);
+    }
+
+    function redraw(highlightedNode = null) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawNode(root, false);
+    }
+
+    // Highlight traversal order (animation)
+    async function animateTraversal(nodes) {
+      for (let node of nodes) {
+        redraw();
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, nodeRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = "orange";
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#fff";
+        ctx.fillText(node.value, node.x, node.y);
+        await new Promise(r => setTimeout(r, 600));
+      }
+    }
+
+    function startBFS() {
+      const result = [];
+      const queue = [root];
+      while (queue.length > 0) {
+        const current = queue.shift();
+        if (current) {
+          result.push(current);
+          if (current.left) queue.push(current.left);
+          if (current.right) queue.push(current.right);
+        }
+      }
+      animateTraversal(result);
+    }
+
+    function startDFS() {
+      const result = [];
+      function dfs(node) {
+        if (!node) return;
+        result.push(node);
+        dfs(node.left);
+        dfs(node.right);
+      }
+      dfs(root);
+      animateTraversal(result);
+    }
+  </script>
+
+</body>
+</html>
