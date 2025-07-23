@@ -10,19 +10,21 @@
     <h1 class="text-3xl font-bold mb-6 text-center">Practicar Floyd-Warshall</h1>
 
     <div class="flex flex-wrap gap-4 items-center mb-6 justify-center">
-      <label for="size" class="font-semibold text-lg">Matrix size:</label>
+      <label for="size" class="font-semibold text-lg">Tamaño de matriz:</label>
       <input id="size" type="number" value="4" min="2" max="10"
              class="border border-gray-400 rounded px-3 py-1 w-20 text-center" />
       <button onclick="generateMatrix()"
-              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-        Generate Matrix
+              class="bg-gray-800 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400">
+        Generar matriz
       </button>
       <button onclick="cloneAndHighlight()"
-              class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
-        Clone Table with Highlight
+              class="bg-gray-800 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400">
+
+        Siguiente tabla
       </button>
       <button onclick="runFloydWarshall()"
-              class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+              class="bg-gray-800 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400">
+
         Run Floyd-Warshall
       </button>
     </div>
@@ -43,7 +45,7 @@
       size = parseInt(document.getElementById("size").value);
       currentHighlight = 0;
       matrix = Array.from({ length: size }, (_, i) =>
-        Array.from({ length: size }, (_, j) => (i === j ? "0" : "Infinity"))
+        Array.from({ length: size }, (_, j) => (i === j ? "0" : "inf"))
       );
       renderMatrix();
       document.getElementById("clonesContainer").innerHTML = "";
@@ -96,11 +98,11 @@
 
 function cloneAndHighlight() {
   if (currentHighlight >= size) {
-    alert("No more rows/columns to highlight.");
+    alert("No hay más pasos");
     return;
   }
 
-  // Get the latest user input
+  // Recibe el ultimo input del usuario
   const inputs = document.querySelectorAll("#matrixContainer input[data-i]");
   inputs.forEach(input => {
     const i = parseInt(input.dataset.i);
@@ -135,7 +137,7 @@ function cloneAndHighlight() {
       });
 
       let dist = matrix.map(row => row.map(val =>
-        val === "Infinity" ? Infinity : parseFloat(val)
+        val === "inf" ? Infinity : parseFloat(val)
       ));
 
       for (let k = 0; k < size; k++) {
@@ -178,7 +180,7 @@ function cloneAndHighlight() {
       resultContainer.appendChild(table);
     }
 
-    generateMatrix(); // Initial load
+    generateMatrix(); // Carga inicial
   </script>
 </body>
 </html>

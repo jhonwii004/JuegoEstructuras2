@@ -3,40 +3,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Binary Tree Visualizer</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-    }
-
-    canvas {
-      border: 1px solid #ccc;
-      margin-top: 20px;
-    }
-
-    input, select, button {
-      padding: 8px 12px;
-      font-size: 16px;
-      margin: 5px;
-    }
-  </style>
+  <title>Visualizador de Árbol Binario</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-100 font-sans text-center p-6 min-h-screen">
 
-  <h1>Visualizador de Árbol Binario</h1>
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Visualizador de Árbol Binario</h1>
 
-  <input type="number" id="nodeValue" placeholder="Ingresa un número" />
-  <select id="nodeColor">
-    <option value="green">Verde</option>
-    <option value="blue">Azul</option>
-  </select>
-  <button onclick="addNode()">Agregar Nodo</button>
-  <br />
-  <button onclick="startBFS()">Búsqueda en anchura</button>
-  <button onclick="startDFS()">Búsqueda en profundidad</button>
+  <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-4">
+    <input type="number" id="nodeValue" placeholder="Ingresa un número" 
+           class="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+    <select id="nodeColor" 
+            class="px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="green">Verde</option>
+      <option value="blue">Azul</option>
+    </select>
+    <button onclick="addNode()" 
+            class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
+      Agregar Nodo
+    </button>
+  </div>
 
-  <canvas id="treeCanvas" width="1000" height="600"></canvas>
+  <div class="flex justify-center gap-4 mb-6">
+    <button onclick="startBFS()" 
+            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition">
+      Búsqueda en anchura
+    </button>
+    <button onclick="startDFS()" 
+            class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition">
+      Búsqueda en profundidad
+    </button>
+  </div>
+
+  <div class="overflow-x-auto">
+    <canvas id="treeCanvas" width="1000" height="600" class="border border-gray-400 rounded-md shadow-md mx-auto"></canvas>
+  </div>
 
   <script>
     const canvas = document.getElementById("treeCanvas");
@@ -138,7 +139,6 @@
       drawNode(root, false);
     }
 
-    // Highlight traversal order (animation)
     async function animateTraversal(nodes) {
       for (let node of nodes) {
         redraw();
