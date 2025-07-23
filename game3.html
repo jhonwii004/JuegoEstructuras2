@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ProyectoED2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex flex-col items-center justify-center p-5">
+    <nav>
+    <p class="text-XXS font-bold text-blue-700 ">PROYECTO DE ESTRUCTURA DE DATOS II</p>
+    <h1 class="text-3xl font-bold text-blue-700 mb-4">Descubre la contraseña</h1>
+    <button id="Help" class="bg-blue-500 text-xl  text-white font-bold px-2 py-1  m-2 rounded hover:bg-gray-400">Instrucciones</button>
+    <div id ="instrucciones" class="hidden bg-gray-200 p-4 rounded mb-6">
+        <p class="text-lg text-center text-gray-700 mb-2">Los indices son el paso en el que el recorrido encuentra el nodo que da la pista</p>
+        <div class="grid grid-cols-2 gap-3">
+            <div>   
+            <p class="text-lg text-center font-semibold text-gray-700 mb-2">Recorrido en anchura:</p>
+            <p class="text-sm text-center text-gray-600 mb-4">Los arboles en azul dan pistas en anchura</p>
+            </div>
+            <div>
+            <p class="text-lg text-center font-semibold text-gray-700 mb-2">Recorrido en profundidad:</p>
+            <p class="text-sm text-center text-gray-600 mb-4">Los arboles en verde dan pistas en profundidad</p>
+            </div>
+        </div>
+    </div>
+    <!-- Level Buttons -->
+    <div id="levelList" class="grid grid-cols-3 gap-4 mb-6"></div>
+
+    <!-- Timer, Input, and Messages -->
+    <div id="timer" class="text-xl font-semibold mb-2 hidden">Tiempo Restante: 30</div>
+    <div class="bg-gray-800 text-2xl text-white w-3/5 rounded mb-4">
+        <div id="inputDisplay" class="text-2xl text-center tracking-widest text-white-800"></div>
+    </div>
+    <div id="message" class="text-lg font-semibold mt-2 text-red-600"></div>
+
+    <!-- Se toma la imagen para dar pistas -->
+    <img id="levelImage" src="" alt="Level Image" class="w-64 h-40 object-contain mb-6 hidden" />
+    <div id="indices" class="text-lg font-semibold mt-2 text-green-600"></div>
+
+    <!-- Keypad Grid -->
+    <div class="flex justify-center w-full">
+        <div id="keypad" class="grid grid-cols-3 gap-3 mt-4 hidden items-center justify-between"></div>
+    </div>
+    <button id="Restart" class="hidden bg-blue-500 text-xl  text-white font-bold px-2 py-1  m-2 rounded hover:bg-gray-400">Regresar</button>
+         <button
+        onclick="window.location.href='game2.html'"
+        class="bg-blue-500 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400"
+        >
+        Go to Other Page
+        </button>
+                 <button
+        onclick="window.location.href='TreeBuilder.html'"
+        class="bg-blue-500 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400"
+        >
+        Crear arbol
+        </button>
+  <script src="game.js"></script>
+</body>
+</html>

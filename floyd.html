@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Algoritmo Floyd-Warshall</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6 font-sans">
+  <div class="max-w-6xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6 text-center">Practicar Floyd-Warshall</h1>
+
+    <div class="flex flex-wrap gap-4 items-center mb-6 justify-center">
+      <label for="size" class="font-semibold text-lg">Matrix size:</label>
+      <input id="size" type="number" value="4" min="2" max="10"
+             class="border border-gray-400 rounded px-3 py-1 w-20 text-center" />
+      <button onclick="generateMatrix()"
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        Generate Matrix
+      </button>
+      <button onclick="cloneAndHighlight()"
+              class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">
+        Clone Table with Highlight
+      </button>
+      <button onclick="runFloydWarshall()"
+              class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+        Run Floyd-Warshall
+      </button>
+    </div>
+        <div class="flex flex-row mx-auto justify-center gap-3">
+            <div id="matrixContainer" class="overflow-auto mb-6"></div>
+            <div id="resultContainer" class="mb-6"></div>
+        </div>
+        <div id="clonesContainer" class="flex flex-wrap gap-4 mt-4"></div>
+        
+  </div>
+
+  <script>
+    let matrix = [];
+    let size = 4;
+    let currentHighlight = 0;
+
+    function generateMatrix() {
+      size = parseInt(document.getElementById("size").value);
+      currentHighlight = 0;
+      matrix = Array.from({ length: size }, (_, i) =>
+        Array.from({ length: size }, (_, j) => (i === j ? "0" : "Infinity"))
+      );
+      renderMatrix();
+      document.getElementById("clonesContainer").innerHTML = "";
+      document.getElementById("resultContainer").innerHTML = "";
+    }
+
+    function renderMatrix() {
+      const container = document.getElementById("matrixContainer");
+      container.innerHTML = "";
+      container.appendChild(createMatrixTable(matrix));
+    }
+
+    function createMatrixTable(mat, highlightIndex = -1) {
+      const table = document.createElement("table");
+      table.className = "table-auto border-collapse border border-gray-500 mx-auto";
+
+      const header = document.createElement("tr");
+      header.innerHTML =
+        "<th class='border border-gray-500 px-2 py-1'></th>" +
+        Array.from({ length: size }, (_, i) =>
+          `<th class="border border-gray-500 px-2 py-1 ${i === highlightIndex ? 'bg-yellow-200 font-bold' : ''}">${i}</th>`
+        ).join("");
+      table.appendChild(header);
+
+      for (let i = 0; i < size; i++) {
+        const row = document.createElement("tr");
+        row.innerHTML =
+          `<th class="border border-gray-500 px-2 py-1 ${i === highlightIndex ? 'bg-yellow-200 font-bold' : ''}">${i}</th>`;
+        for (let j = 0; j < size; j++) {
+          const cell = document.createElement("td");
+          cell.className = "border border-gray-500 px-2 py-1";
+          const input = document.createElement("input");
+          input.value = matrix[i][j];
+          input.dataset.i = i;
+          input.dataset.j = j;
+          input.className =
+            "w-16 text-center border border-gray-300 rounded px-1 py-0.5" +
+            (i === highlightIndex || j === highlightIndex ? " bg-yellow-200 font-bold" : "");
+          input.oninput = (e) => {
+            matrix[i][j] = e.target.value;
+          };
+          cell.appendChild(input);
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+
+      return table;
+    }
+
+function cloneAndHighlight() {
+  if (currentHighlight >= size) {
+    alert("No more rows/columns to highlight.");
+    return;
+  }
+
+  // Get the latest user input
+  const inputs = document.querySelectorAll("#matrixContainer input[data-i]");
+  inputs.forEach(input => {
+    const i = parseInt(input.dataset.i);
+    const j = parseInt(input.dataset.j);
+    matrix[i][j] = input.value;
+  });
+
+  const clone = createMatrixTable(matrix, currentHighlight);
+  const container = document.getElementById("clonesContainer");
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "p-2 bg-white rounded shadow-md flex flex-col items-center";
+
+  const title = document.createElement("div");
+  title.className = "font-semibold mb-2";
+  title.textContent = `Step k = ${currentHighlight}`;
+
+  wrapper.appendChild(title);
+  wrapper.appendChild(clone);
+  container.appendChild(wrapper);
+
+  currentHighlight++;
+}
+
+
+    function runFloydWarshall() {
+      const inputs = document.querySelectorAll("#matrixContainer input[data-i]");
+      inputs.forEach(input => {
+        const i = parseInt(input.dataset.i);
+        const j = parseInt(input.dataset.j);
+        matrix[i][j] = input.value;
+      });
+
+      let dist = matrix.map(row => row.map(val =>
+        val === "Infinity" ? Infinity : parseFloat(val)
+      ));
+
+      for (let k = 0; k < size; k++) {
+        for (let i = 0; i < size; i++) {
+          for (let j = 0; j < size; j++) {
+            if (dist[i][k] + dist[k][j] < dist[i][j]) {
+              dist[i][j] = dist[i][k] + dist[k][j];
+            }
+          }
+        }
+      }
+
+      showFinalMatrix(dist);
+    }
+
+    function showFinalMatrix(dist) {
+      const resultContainer = document.getElementById("resultContainer");
+
+      const table = document.createElement("table");
+      table.className = "table-auto border-collapse border border-gray-500 mx-auto";
+
+      const header = document.createElement("tr");
+      header.innerHTML =
+        "<th class='border border-gray-500 px-5 py-1'></th>" +
+        Array.from({ length: size }, (_, i) => `<th class="border border-gray-500 px-2 py-1">${i}</th>`).join("");
+      table.appendChild(header);
+
+      for (let i = 0; i < size; i++) {
+        const row = document.createElement("tr");
+        row.innerHTML = `<th class="border border-gray-500 px-2 py-2">${i}</th>`;
+        for (let j = 0; j < size; j++) {
+          const cell = document.createElement("td");
+          cell.className = "border border-gray-500 px-7 py-1";
+          cell.textContent = dist[i][j] === Infinity ? "∞" : dist[i][j];
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+
+      resultContainer.appendChild(table);
+    }
+
+    generateMatrix(); // Initial load
+  </script>
+</body>
+</html>
