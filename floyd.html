@@ -108,11 +108,11 @@ function cloneAndHighlight() {
 
   let sourceTable;
 
-  // If this is the first step, use the main matrix container
+  
   if (currentHighlight === 0) {
     sourceTable = document.querySelectorAll("#matrixContainer input[data-i]");
   } else {
-    // Otherwise, get inputs from the last cloned table
+  
     const allClones = document.querySelectorAll("#clonesContainer table");
     const lastClone = allClones[allClones.length - 1];
     sourceTable = lastClone.querySelectorAll("input[data-i]");
