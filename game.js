@@ -2,7 +2,10 @@
 const niveles = [
   { nombre: "Nivel 1", password: "12345", image: "images/Arbol1.png", Indice: "1,2,3,4,5"},
   { nombre: "Nivel 2", password: "45634", image: "images/Arbol2.png", Indice: "3,5,6,4,3" },
-  { nombre: "Nivel 1", password: "12345", image: "images/Arbol1.png", Indice: "1,2,3,4,5" },
+  { nombre: "Nivel 3", password: "55501624", image: "images/Arbol3.png", Indice: "3,3,1,2,5" },
+  { nombre: "Nivel 4", password: "253551025", image: "images/Arbol4.png", Indice: "5,7,1,2,5" },
+  { nombre: "Nivel 5", password: "1212332", image: "images/Arbol5.png", Indice: "2,2,1,1,5" },
+
 ];
 
 // Game state

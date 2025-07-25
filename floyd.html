@@ -5,11 +5,12 @@
   <title>Algoritmo Floyd-Warshall</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen p-6 font-sans">
+<body class="bg-white min-h-screen p-6 font-sans">
   <div class="max-w-6xl mx-auto">
     <h1 class="text-3xl font-bold mb-6 text-center">Practicar Floyd-Warshall</h1>
 
-    <div class="flex flex-wrap gap-4 items-center mb-6 justify-center">
+    <div class="flex flex-wrap gap-4 items-center mb-6 pb-10 justify-between">
+    <div>
       <label for="size" class="font-semibold text-lg">Tamaño de matriz:</label>
       <input id="size" type="number" value="4" min="2" max="10"
              class="border border-gray-400 rounded px-3 py-1 w-20 text-center" />
@@ -22,11 +23,14 @@
 
         Siguiente tabla
       </button>
+      </div>
+      <div>
       <button onclick="runFloydWarshall()"
               class="bg-gray-800 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400">
 
-        Run Floyd-Warshall
+        Ejecutar Floyd-Warshall
       </button>
+      </div>
     </div>
         <div class="flex flex-row mx-auto justify-center gap-3">
             <div id="matrixContainer" class="overflow-auto mb-6"></div>

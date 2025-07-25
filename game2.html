@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Binary Search Game with Random Values</title>
+  <title>Búsqueda binaria visual</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center p-8">
+<body class="bg-white min-h-screen flex flex-col items-center p-8">
 
-  <h1 class="text-3xl font-bold mb-4 text-center">🔍 Binary Search Game</h1>
-  <p class="text-lg mb-4 text-center">Click the <strong>middle element</strong> in each subarray. Each step appears below the last.</p>
+  <h1 class="text-3xl font-bold mb-4 text-center">Búsqueda binaria</h1>
+  <p class="text-lg mb-4 text-center">Haz clic en el <strong>elemento del medio</strong> en cada paso.</p>
 
-  <div id="arrays-container" class="flex flex-col items-center gap-4 w-full mb-6"></div>
+  <div id="arrays-container" class="flex flex-col items-center gap-2 w-full mb-6"></div>
   <div id="info" class="text-center text-xl font-semibold text-gray-800 mb-4"></div>
 
-  <button id="restart-btn" class="bg-blue-500 text-xl text-white font-bold px-2 py-1 rounded hover:bg-gray-400 hidden">
-    🔁 Play Again
+  <button id="restart-btn" class="bg-gray-800 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400">
+    Volver a jugar
   </button>
 
   <script>
@@ -25,14 +25,13 @@
     const infoDiv = document.getElementById('info');
     const restartBtn = document.getElementById('restart-btn');
 
-    // Generate unique random integers, sort ascending
     function generateSortedRandomArray(size, min, max) {
       const set = new Set();
-      while(set.size < size) {
+      while (set.size < size) {
         const val = Math.floor(Math.random() * (max - min + 1)) + min;
         set.add(val);
       }
-      return Array.from(set).sort((a,b) => a - b);
+      return Array.from(set).sort((a, b) => a - b);
     }
 
     function resetGame() {
@@ -42,20 +41,29 @@
       high = fullArray.length - 1;
       steps = 0;
       container.innerHTML = '';
-      infoDiv.innerHTML = `<p>🎯 Target value: <strong>${target}</strong></p>`;
+      infoDiv.innerHTML = `<p>🎯 Valor objetivo: <strong>${target}</strong></p>`;
       restartBtn.classList.add("hidden");
-      renderSubArray(low, high);
+      renderArrayStep();
     }
 
-    function renderSubArray(start, end) {
+    function renderArrayStep() {
       const row = document.createElement('div');
-      row.className = 'flex justify-center gap-2';
+      row.className = 'flex justify-center flex-wrap';
 
-      for (let i = start; i <= end; i++) {
+      for (let i = 0; i < fullArray.length; i++) {
         const btn = document.createElement('button');
         btn.textContent = fullArray[i];
-        btn.className = 'bg-blue-500 text-xl text-white font-bold px-2 py-1 rounded hover:bg-gray-400';
-        btn.addEventListener('click', () => handleClick(i, row));
+        btn.className =
+          'text-xl font-bold px-4 py-2 border border-gray-500 ' +
+          (i >= low && i <= high
+            ? 'bg-white-500 text-black hover:bg-white-400'
+            : 'bg-gray-300 text-gray-600 cursor-not-allowed');
+        btn.disabled = !(i >= low && i <= high);
+
+        if (i >= low && i <= high) {
+          btn.addEventListener('click', () => handleClick(i, row));
+        }
+
         row.appendChild(btn);
       }
 
@@ -68,7 +76,7 @@
       steps++;
 
       if (index !== expectedMid) {
-        alert(`Incorrect! The correct mid is at index ${expectedMid} (value ${fullArray[expectedMid]}). Try again.`);
+        alert(` Incorrecto. El medio actual está en el índice ${expectedMid} (valor ${fullArray[expectedMid]}).`);
         return;
       }
 
@@ -77,8 +85,9 @@
       Array.from(row.children).forEach(btn => btn.disabled = true);
 
       if (midValue === target) {
-        row.children[index - low].classList.add('bg-green-500');
-        infoDiv.innerHTML = `<p class="text-green-700 font-bold">🎉 You found the target <strong>${target}</strong> in ${steps} steps!</p>`;
+        row.children[index].classList.remove('bg-blue-500');
+        row.children[index].classList.add('bg-green-500');
+        infoDiv.innerHTML = `<p class="text-green-700 font-bold">¡Encontraste el valor <strong>${target}</strong> en ${steps} pasos!</p>`;
         restartBtn.classList.remove("hidden");
         return;
       } else if (midValue < target) {
@@ -88,12 +97,12 @@
       }
 
       if (low > high) {
-        infoDiv.innerHTML = `<p class="text-red-600 font-bold">❌ No more elements left. Target was ${target}. This shouldn't happen in correct binary search!</p>`;
+        infoDiv.innerHTML = `<p class="text-red-600 font-bold"> No quedan elementos. El objetivo era ${target}.</p>`;
         restartBtn.classList.remove("hidden");
         return;
       }
 
-      renderSubArray(low, high);
+      renderArrayStep();
     }
 
     function scrollToBottom() {
@@ -102,15 +111,15 @@
 
     restartBtn.addEventListener('click', resetGame);
 
-    // Start the game
     resetGame();
   </script>
-         <button
-        onclick="window.location.href='index.html'"
-        class="bg-blue-500 text-white font-semibold text-sm px-3 py-1 rounded hover:bg-gray-400"
-        >
-        Go to Other Page
-        </button>
+
+  <button
+    onclick="window.location.href='index.html'"
+      class="bg-gray-800 text-white font-semibold text-sm px-3 py-1 p-4 gap-5 rounded hover:bg-gray-400"
+  >
+    Regresar  
+  </button>
 
 </body>
 </html>
