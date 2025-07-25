@@ -106,14 +106,27 @@ function cloneAndHighlight() {
     return;
   }
 
-  // Recibe el ultimo input del usuario
-  const inputs = document.querySelectorAll("#matrixContainer input[data-i]");
-  inputs.forEach(input => {
+  let sourceTable;
+
+  // If this is the first step, use the main matrix container
+  if (currentHighlight === 0) {
+    sourceTable = document.querySelectorAll("#matrixContainer input[data-i]");
+  } else {
+    // Otherwise, get inputs from the last cloned table
+    const allClones = document.querySelectorAll("#clonesContainer table");
+    const lastClone = allClones[allClones.length - 1];
+    sourceTable = lastClone.querySelectorAll("input[data-i]");
+  }
+
+  // Read values from source and update matrix
+  sourceTable.forEach(input => {
     const i = parseInt(input.dataset.i);
     const j = parseInt(input.dataset.j);
-    matrix[i][j] = input.value;
+    const val = input.value.trim();
+    matrix[i][j] = val === "inf" || val === "∞" ? "inf" : Number(val);
   });
 
+  // Clone table from updated matrix and highlight
   const clone = createMatrixTable(matrix, currentHighlight);
   const container = document.getElementById("clonesContainer");
 
@@ -130,6 +143,8 @@ function cloneAndHighlight() {
 
   currentHighlight++;
 }
+
+
 
 
     function runFloydWarshall() {
